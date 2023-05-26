@@ -6,7 +6,7 @@ const getAll = async () => {
     .execute(
       `SELECT sale_id, product_id, quantity, sales.date FROM sales 
       INNER JOIN sales_products ON sales.id = sale_id
-      ORDER BY sales_id, product_id;`,
+      ORDER BY sale_id, product_id;`,
     );
   return camelize(result);
 };
@@ -16,7 +16,7 @@ const getById = async (id) => {
     .execute(
       `SELECT sale_id, product_id, quantity, sales.date FROM sales 
       INNER JOIN sales_products ON sales.id = sale_id AND sale_id = ?
-      ORDER BY sales_id, product_id;`,
+      ORDER BY sale_id, product_id;`,
       [id],
     );
   return camelize(result);
