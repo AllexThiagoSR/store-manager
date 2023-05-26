@@ -9,7 +9,7 @@ describe('Testes de sales na camada model', function () {
   afterEach(sinon.stub);
 
   it('getAll', async function () {
-    sinon.stub(connection, 'execute').resolves(sales);
+    sinon.stub(connection, 'execute').resolves([sales]);
     expect(await salesModel.getAll()).to.be.deep.equal(sales);
   });
 });
