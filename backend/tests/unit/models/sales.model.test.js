@@ -14,12 +14,12 @@ describe('Testes de sales na camada model', function () {
   });
 
   it('getById id existente', async function () {
-    sinon.stub(connection, 'execute').resolves([sales]);
-    expect(await salesModel.getById(1)).to.be.deep.equal(sales[0]);
+    sinon.stub(connection, 'execute').resolves([[sales[0], sales[1]]]);
+    expect(await salesModel.getById(1)).to.be.deep.equal([sales[0], sales[1]]);
   });
 
   it('getById id inexistente', async function () {
     sinon.stub(connection, 'execute').resolves([[]]);
-    expect(await salesModel.getById(1)).to.be.deep.equal(undefined);
+    expect(await salesModel.getById(1)).to.be.deep.equal([]);
   });
 });

@@ -20,12 +20,13 @@ describe('Testes de sales na camada model', function () {
   });
 
   it('getById com id existente', async function () {
-    sinon.stub(salesModel, 'getById').resolves(sales[1]);
-    expect(await salesService.getById(2)).to.be.deep.equal({ type: null, message: sales[1] });
+    sinon.stub(salesModel, 'getById').resolves([sales[0], sales[1]]);
+    expect(await salesService.getById(1))
+      .to.be.deep.equal({ type: null, message: [sales[0], sales[1]] });
   });
 
   it('getAll com id inexistente', async function () {
-    sinon.stub(salesModel, 'getById').resolves(undefined);
+    sinon.stub(salesModel, 'getById').resolves([]);
     expect(await salesService.getById(99999))
       .to.be.deep.equal({ type: 404, message: 'Sale not found' });
   });
