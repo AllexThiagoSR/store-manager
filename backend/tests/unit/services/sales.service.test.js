@@ -18,4 +18,15 @@ describe('Testes de sales na camada model', function () {
     expect(await salesService.getAll())
       .to.be.deep.equal({ type: 500, message: 'Internal server error' });
   });
+
+  it('getById com id existente', async function () {
+    sinon.stub(salesModel, 'getById').resolves(sales[1]);
+    expect(await salesService.getById(2)).to.be.deep.equal({ type: null, message: sales[1] });
+  });
+
+  it('getAll com id inexistente', async function () {
+    sinon.stub(salesModel, 'getById').resolves(undefined);
+    expect(await salesService.getById(99999))
+      .to.be.deep.equal({ type: 404, message: 'Sale not found' });
+  });
 });
