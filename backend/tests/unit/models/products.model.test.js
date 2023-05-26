@@ -13,8 +13,13 @@ describe('Testes products na camada model', function () {
     expect(await productsModel.getAll()).to.be.deep.equal(allProducts);
   });
 
-  it('getById', async function () {
+  it('getById id existente', async function () {
     sinon.stub(connection, 'execute').resolves([[allProducts[1]]]);
     expect(await productsModel.getById(2)).to.be.deep.equal(allProducts[1]);
+  });
+  
+  it('getById id inexistente', async function () {
+    sinon.stub(connection, 'execute').resolves([[]]);
+    expect(await productsModel.getById(2)).to.be.deep.equal(undefined);
   });
 });
