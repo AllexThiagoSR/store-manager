@@ -5,6 +5,10 @@ const getAll = async () => {
   return result;
 };
 
-getAll();
+const getById = async (id) => {
+  const [[result]] = await connection
+    .execute('SELECT * FROM products WHERE id = ?', [id]);
+  return result;
+};
 
-module.exports = { getAll };
+module.exports = { getAll, getById };
