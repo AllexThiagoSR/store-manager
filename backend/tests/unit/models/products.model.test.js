@@ -1,8 +1,8 @@
 const { expect } = require('chai');
 const { describe, it } = require('mocha');
 const sinon = require('sinon');
-const { productsModel } = require('../models');
-const connection = require('../models/connection');
+const { productsModel } = require('../../../src/models');
+const connection = require('../../../src/models/connection');
 const { allProducts } = require('./mocks/porducts.model.mocks');
 
 describe('Testes products na camada model', function () {
