@@ -12,6 +12,12 @@ describe('Testes products na camada service', function () {
     sinon.stub(productsModel, 'getAll').resolves(allProducts);
     expect(await productsService.getAll()).to.be.deep.equal({ type: null, message: allProducts });
   });
+  
+  it('getAll captura o erro e lança uma mensagem genérica', async function () {
+    sinon.stub(productsModel, 'getAll').rejects();
+    expect(await productsService.getAll())
+      .to.be.deep.equal({ type: 500, message: 'Internal server error' });
+  });
 
   it('getById com um id existente', async function () {
     sinon.stub(productsModel, 'getById').resolves(allProducts[1]);
