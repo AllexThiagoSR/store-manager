@@ -19,4 +19,15 @@ describe('Testes products na camada controller', function () {
     expect(res.status).to.have.been.calledWith(200);
     expect(res.json).to.have.been.calledWith(allProducts.message);
   });
+
+  it('getById com id existente', async function () {
+    const req = { params: { id: '1' } };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    sinon.stub(productsService, 'getById').resolves(allProducts);
+    await productsController.getAll(req, res);
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(allProducts.message);
+  });
 });

@@ -6,8 +6,22 @@ const { allProducts } = require('./mocks/porducts.service.mocks');
 const { productsService } = require('../../../src/services');
 
 describe('Testes products na camada service', function () {
+  afterEach(sinon.restore);
+
   it('getAll', async function () {
     sinon.stub(productsModel, 'getAll').resolves(allProducts);
     expect(await productsService.getAll()).to.be.deep.equal({ type: null, message: allProducts });
+  });
+
+  it('getById com um id existente', async function () {
+    sinon.stub(productsModel, 'getById').resolves(allProducts[1]);
+    expect(await productsService.getById(2))
+      .to.be.deep.equal({ type: null, message: allProducts[1] });
+  });
+
+  it('getById com um id inexistente', async function () {
+    sinon.stub(productsModel, 'getById').resolves(undefined);
+    expect(await productsService.getById(9999))
+      .to.be.deep.equal({ type: 404, message: 'Product not found' });
   });
 });

@@ -9,4 +9,10 @@ const getAll = async () => {
   }
 };
 
-module.exports = { getAll };
+const getById = async (id) => {
+  const result = await productsModel.getById(id);
+  if (!result) return { type: 404, message: 'Product not found' };
+  return { type: null, message: result };
+};
+
+module.exports = { getAll, getById };
