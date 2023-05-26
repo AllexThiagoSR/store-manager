@@ -7,4 +7,11 @@ const getAll = async (_req, res) => {
   return res.status(status).json(result);
 };
 
-module.exports = { getAll };
+const getById = async ({ params }, res) => {
+  const { type, message } = await productsService.getById(params.id);
+  const status = type || 200;
+  const result = typeof message === 'string' ? { message } : message;
+  return res.status(status).json(result); 
+};
+
+module.exports = { getAll, getById };

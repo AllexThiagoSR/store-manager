@@ -10,9 +10,13 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  const result = await productsModel.getById(id);
-  if (!result) return { type: 404, message: 'Product not found' };
-  return { type: null, message: result };
+  try {
+    const result = await productsModel.getById(id);
+    if (!result) return { type: 404, message: 'Product not found' };
+    return { type: null, message: result };
+  } catch (error) {
+    return { type: 500, message: 'Internal server error' };
+  }
 };
 
 module.exports = { getAll, getById };
