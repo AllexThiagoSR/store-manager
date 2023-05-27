@@ -22,4 +22,9 @@ const getById = async (id) => {
   return camelize(result);
 };
 
-module.exports = { getAll, getById };
+const create = async () => {
+  const [{ insertId }] = await connection.execute('INSERT INTO sales() VALUES()');
+  return insertId;
+};
+
+module.exports = { getAll, getById, create };
