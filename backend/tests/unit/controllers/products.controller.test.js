@@ -5,7 +5,7 @@ const sinonChai = require('sinon-chai');
 const { allProducts, oneProduct } = require('./mocks/porducts.controller.mocks');
 const { productsService } = require('../../../src/services');
 const { productsController } = require('../../../src/controllers');
-const { productsMiddlewares } = require('../../../src/middlewares');
+const { validateProductCreate } = require('../../../src/middlewares/products.middlewares');
 
 const INTERNAL_SERVER_ERROR = 'Internal server error';
 chai.use(sinonChai);
@@ -103,14 +103,24 @@ describe('Testes products na camada controller', function () {
       .to.have.been.calledWith({ message: '"name" length must be at least 5 characters long' });
   });
 
-  it('create sem a propriedade name', async function () {
+  it('middlware de validação sem a propriedade name', async function () {
     const req = { body: {} };
     const res = {};
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub();
-    await productsMiddlewares.validateProductCreate(req, res);
+    await validateProductCreate(req, res);
     expect(res.status).to.have.been.calledWith(400);
     expect(res.json)
-      .to.have.been.calledWith({ message: '"name"  is required' });
+      .to.have.been.calledWith({ message: '"name" is required' });
+  });
+
+  it('middlware de validação com propriedade name', async function () {
+    const req = { body: { name: 'asds' } };
+    const res = {};
+    const next = sinon.stub().returns();
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    await validateProductCreate(req, res, next);
+    expect(next).to.have.been.calledWith();
   });
 });
