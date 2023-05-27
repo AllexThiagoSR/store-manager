@@ -22,6 +22,17 @@ describe('Testes products na camada controller', function () {
     expect(res.json).to.have.been.calledWith(allProducts.message);
   });
 
+  it('getAll quando há um erro não mapeado na camada service', async function () {
+    const req = {};
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    sinon.stub(productsService, 'getAll').resolves({ type: 500, message: 'Internal server error' });
+    await productsController.getAll(req, res);
+    expect(res.status).to.have.been.calledWith(500);
+    expect(res.json).to.have.been.calledWith({ message: 'Internal server error' });
+  });
+
   it('getById com id existente', async function () {
     const req = { params: { id: '1' } };
     const res = {};
@@ -42,5 +53,17 @@ describe('Testes products na camada controller', function () {
     await productsController.getById(req, res);
     expect(res.status).to.have.been.calledWith(404);
     expect(res.json).to.have.been.calledWith({ message: 'Product not found' });
+  });
+
+  it('getById quando há um erro não mapeado na camada service', async function () {
+    const req = { params: {} };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    sinon.stub(productsService, 'getById')
+      .resolves({ type: 500, message: 'Internal server error' });
+    await productsController.getById(req, res);
+    expect(res.status).to.have.been.calledWith(500);
+    expect(res.json).to.have.been.calledWith({ message: 'Internal server error' });
   });
 });

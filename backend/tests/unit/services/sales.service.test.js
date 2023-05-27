@@ -30,4 +30,10 @@ describe('Testes de sales na camada model', function () {
     expect(await salesService.getById(99999))
       .to.be.deep.equal({ type: 404, message: 'Sale not found' });
   });
+
+  it('getById captura o erro e lança uma mensagem genérica', async function () {
+    sinon.stub(salesModel, 'getById').rejects();
+    expect(await salesService.getById())
+      .to.be.deep.equal({ type: 500, message: 'Internal server error' });
+  });
 });

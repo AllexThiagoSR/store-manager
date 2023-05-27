@@ -30,4 +30,10 @@ describe('Testes products na camada service', function () {
     expect(await productsService.getById(9999))
       .to.be.deep.equal({ type: 404, message: 'Product not found' });
   });
+
+  it('getById captura o erro e lança uma mensagem genérica', async function () {
+    sinon.stub(productsModel, 'getById').rejects();
+    expect(await productsService.getById())
+      .to.be.deep.equal({ type: 500, message: 'Internal server error' });
+  });
 });

@@ -22,6 +22,17 @@ describe('Testes sales na camada controller', function () {
     expect(res.json).to.have.been.calledWith(sales.message);
   });
 
+  it('getAll quando há um erro não mapeado na camada service', async function () {
+    const req = {};
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    sinon.stub(salesService, 'getAll').resolves({ type: 500, message: 'Internal server error' });
+    await salesController.getAll(req, res);
+    expect(res.status).to.have.been.calledWith(500);
+    expect(res.json).to.have.been.calledWith({ message: 'Internal server error' });
+  });
+
   it('getById com id existente', async function () {
     const req = { params: { id: '1' } };
     const res = {};
