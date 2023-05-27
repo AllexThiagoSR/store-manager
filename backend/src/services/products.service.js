@@ -1,4 +1,5 @@
 const { productsModel } = require('../models');
+const { validateProduct } = require('./validations');
 
 const getAll = async () => {
   try {
@@ -19,4 +20,15 @@ const getById = async (id) => {
   }
 };
 
-module.exports = { getAll, getById };
+const create = async ({ name }) => {
+  try {
+    const { type, message } = validateProduct({ name });
+    if (type) return { type, message };
+    const id = await productsModel.create({ name });
+    return { type: null, message: { id, name } };
+  } catch (error) {
+    return { type: 500, message: 'Internal server error' };
+  }
+};
+
+module.exports = { getAll, getById, create };
