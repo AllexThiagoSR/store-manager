@@ -15,6 +15,7 @@ const getById = async ({ params }, res) => {
 };
 
 const create = async (req, res) => {
+  console.log(req.body);
   const { type, message } = await productsService.create(req.body);
   const status = type || 201;
   const result = typeof message === 'string' ? { message } : message;

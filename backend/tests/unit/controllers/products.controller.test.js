@@ -97,8 +97,6 @@ describe('Testes products na camada controller', function () {
     const res = {};
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub();
-    // sinon.stub(productsService, 'create')
-    //   .resolves({ type: null, message: { id: 42, name: 'Produto X' } });
     await productsController.create(req, res);
     expect(res.status).to.have.been.calledWith(422);
     expect(res.json)
