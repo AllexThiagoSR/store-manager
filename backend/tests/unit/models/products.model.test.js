@@ -22,4 +22,9 @@ describe('Testes products na camada model', function () {
     sinon.stub(connection, 'execute').resolves([[]]);
     expect(await productsModel.getById(2)).to.be.deep.equal(undefined);
   });
+
+  it('create', async function () {
+    sinon.stub(connection, 'execute').resolves([{ insertId: 42 }]);
+    expect(await productsModel.create()).to.be.equal(42);
+  });
 });
