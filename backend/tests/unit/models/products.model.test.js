@@ -25,6 +25,6 @@ describe('Testes products na camada model', function () {
 
   it('create', async function () {
     sinon.stub(connection, 'execute').resolves([{ insertId: 42 }]);
-    expect(await productsModel.create()).to.be.equal(42);
+    expect(await productsModel.create({ name: 'Produto X' })).to.be.equal(42);
   });
 });
