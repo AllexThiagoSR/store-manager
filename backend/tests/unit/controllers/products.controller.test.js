@@ -5,7 +5,9 @@ const sinonChai = require('sinon-chai');
 const { allProducts, oneProduct } = require('./mocks/porducts.controller.mocks');
 const { productsService } = require('../../../src/services');
 const { productsController } = require('../../../src/controllers');
+const { productsMiddlewares } = require('../../../src/middlewares');
 
+const INTERNAL_SERVER_ERROR = 'Internal server error';
 chai.use(sinonChai);
 const { expect } = chai;
 describe('Testes products na camada controller', function () {
@@ -27,10 +29,10 @@ describe('Testes products na camada controller', function () {
     const res = {};
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub();
-    sinon.stub(productsService, 'getAll').resolves({ type: 500, message: 'Internal server error' });
+    sinon.stub(productsService, 'getAll').resolves({ type: 500, message: INTERNAL_SERVER_ERROR });
     await productsController.getAll(req, res);
     expect(res.status).to.have.been.calledWith(500);
-    expect(res.json).to.have.been.calledWith({ message: 'Internal server error' });
+    expect(res.json).to.have.been.calledWith({ message: INTERNAL_SERVER_ERROR });
   });
 
   it('getById com id existente', async function () {
@@ -61,9 +63,56 @@ describe('Testes products na camada controller', function () {
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub();
     sinon.stub(productsService, 'getById')
-      .resolves({ type: 500, message: 'Internal server error' });
+      .resolves({ type: 500, message: INTERNAL_SERVER_ERROR });
     await productsController.getById(req, res);
     expect(res.status).to.have.been.calledWith(500);
-    expect(res.json).to.have.been.calledWith({ message: 'Internal server error' });
+    expect(res.json).to.have.been.calledWith({ message: INTERNAL_SERVER_ERROR });
+  });
+
+  it('create', async function () {
+    const req = { body: { name: 'Produto X' } };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    sinon.stub(productsService, 'create')
+      .resolves({ type: null, message: { id: 42, name: 'Produto X' } });
+    await productsController.create(req, res);
+    expect(res.status).to.have.been.calledWith(201);
+    expect(res.json).to.have.been.calledWith({ id: 42, name: 'Produto X' });
+  });
+
+  it('create quando há um erro não mapeado na camada service', async function () {
+    const req = { body: { name: 'Produto X' } };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    sinon.stub(productsService, 'create').resolves({ type: 500, message: INTERNAL_SERVER_ERROR });
+    await productsController.create(req, res);
+    expect(res.status).to.have.been.calledWith(500);
+    expect(res.json).to.have.been.calledWith({ message: INTERNAL_SERVER_ERROR });
+  });
+
+  it('create com um nome inválido', async function () {
+    const req = { body: { name: 'Pro' } };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    // sinon.stub(productsService, 'create')
+    //   .resolves({ type: null, message: { id: 42, name: 'Produto X' } });
+    await productsController.create(req, res);
+    expect(res.status).to.have.been.calledWith(422);
+    expect(res.json)
+      .to.have.been.calledWith({ message: '"name" length must be at least 5 characters long' });
+  });
+
+  it('create sem a propriedade name', async function () {
+    const req = { body: {} };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    await productsMiddlewares.validateProductCreate(req, res);
+    expect(res.status).to.have.been.calledWith(400);
+    expect(res.json)
+      .to.have.been.calledWith({ message: '"name"  is required' });
   });
 });
