@@ -36,4 +36,30 @@ describe('Testes products na camada service', function () {
     expect(await productsService.getById())
       .to.be.deep.equal({ type: 500, message: 'Internal server error' });
   });
+
+  it('create', async function () {
+    sinon.stub(productsModel, 'create').resolves(42);
+    expect(await productsService.create({ name: 'Produto X' }))
+      .to.be.deep.equal({ 
+        type: null,
+        message: {
+          id: 42,
+          name: 'Produto X',
+        },
+    });
+  });
+  
+  it('create captura o erro e lança uma mensagem genérica', async function () {
+    sinon.stub(productsModel, 'create').rejects();
+    expect(await productsService.create())
+      .to.be.deep.equal({ type: 500, message: 'Internal server error' });
+  });
+
+  it('create com um name com menos de 5 caracteres lança uma mensagem de erro', async function () {
+    expect(await productsService.create({ name: 'Pro' }))
+      .to.be.deep.equal({ 
+        type: null,
+        message: '"name" length must be at least 5 characters long',
+    });
+  });
 });
