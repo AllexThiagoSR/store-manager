@@ -1,4 +1,4 @@
-const { salesModel } = require('../models');
+const { salesModel, productsModel } = require('../models');
 
 const getAll = async () => {
   try {
@@ -19,4 +19,20 @@ const getById = async (id) => {
   }
 };
 
-module.exports = { getAll, getById };
+const createSale = async (items) => {
+  try {
+    const soldItems = items.map(({ productId }) => productsModel.getById(productId));
+    if ((await Promise.all(soldItems)).includes(undefined)) {
+      return { type: 404, message: 'Product not found' };
+    }
+    const saleId = await salesModel.create();
+    items.forEach(async ({ productId, quantity }) => {
+      await salesModel.insertSoldItem({ saleId, productId, quantity });
+    });
+    return { type: null, message: { id: saleId, itemsSold: items } };
+  } catch (e) {
+    return { type: 500, message: 'Internal server error' };
+  }
+};
+
+module.exports = { getAll, getById, createSale };

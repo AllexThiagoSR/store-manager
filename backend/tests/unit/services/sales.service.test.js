@@ -3,7 +3,7 @@ const { describe, it } = require('mocha');
 const sinon = require('sinon');
 const { sales, insertedSale } = require('./mocks/sales.service.mocks');
 const { salesService } = require('../../../src/services');
-const { salesModel } = require('../../../src/models');
+const { salesModel, productsModel } = require('../../../src/models');
 
 describe('Testes de sales na camada model', function () {
   afterEach(sinon.restore);
@@ -39,7 +39,23 @@ describe('Testes de sales na camada model', function () {
 
   it('createSale', async function () {
     sinon.stub(salesModel, 'create').resolves(3);
-    sinon.stub(salesModel, 'insertSoldProduct').resolves(5);
-    expect(await salesService.createSale).to.be.deep.equal({ type: null, message: insertedSale });
+    sinon.stub(salesModel, 'insertSoldItem').resolves(5);
+    sinon.stub(productsModel, 'getById').resolves({});
+    expect(await salesService.createSale([{ productId: 1, quantity: 1 }]))
+      .to.be.deep.equal({ type: null, message: insertedSale });
+  });
+
+  it('createSale com um produto inexistente', async function () {
+    sinon.stub(salesModel, 'create').resolves(3);
+    sinon.stub(productsModel, 'getById').resolves(undefined);
+    expect(await salesService.createSale([{ productId: 999, quantity: 1 }]))
+      .to.be.deep.equal({ type: 404, message: 'Product not found' });
+  });
+
+  it('createSale com um erro não mapeado em alguma das camadas mais baixas', async function () {
+    sinon.stub(salesModel, 'create').resolves(3);
+    sinon.stub(productsModel, 'getById').rejects();
+    expect(await salesService.createSale([{ productId: 999, quantity: 1 }]))
+      .to.be.deep.equal({ type: 500, message: 'Internal server error' });
   });
 });
