@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { describe, it } = require('mocha');
 const sinon = require('sinon');
-const { sales } = require('./mocks/sales.service.mocks');
+const { sales, insertedSale } = require('./mocks/sales.service.mocks');
 const { salesService } = require('../../../src/services');
 const { salesModel } = require('../../../src/models');
 
@@ -35,5 +35,11 @@ describe('Testes de sales na camada model', function () {
     sinon.stub(salesModel, 'getById').rejects();
     expect(await salesService.getById())
       .to.be.deep.equal({ type: 500, message: 'Internal server error' });
+  });
+
+  it('createSale', async function () {
+    sinon.stub(salesModel, 'create').resolves(3);
+    sinon.stub(salesModel, 'insertSoldProduct').resolves(5);
+    expect(await salesService.createSale).to.be.deep.equal({ type: null, message: insertedSale });
   });
 });
