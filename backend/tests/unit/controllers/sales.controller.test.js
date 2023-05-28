@@ -73,4 +73,28 @@ describe('Testes sales na camada controller', function () {
     expect(res.status).to.have.been.calledWith(201);
     expect(res.json).to.have.been.calledWith({ id: 3, itemsSold: products });
   });
+
+  it('create com uma quantidade inválida', async function () {
+    const products = [{ productId: 1, quantity: 0 }, { productId: 2, quantity: 5 }];
+    const req = { body: products };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    await salesController.create(req, res);
+    expect(res.status).to.have.been.calledWith(422);
+    expect(res.json).to.have.been
+      .calledWith({ message: '"quantity" must be greater than or equal to 1' });
+  });
+
+  it('create com um productId undefined', async function () {
+    const products = [{ quantity: 0 }, { productId: 2, quantity: 5 }];
+    const req = { body: products };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    await salesController.create(req, res);
+    expect(res.status).to.have.been.calledWith(400);
+    expect(res.json).to.have.been
+      .calledWith({ message: '"productId" is required' });
+  });
 });

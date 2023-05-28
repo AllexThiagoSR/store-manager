@@ -27,4 +27,10 @@ describe('Testes de sales na camada model', function () {
     sinon.stub(connection, 'execute').resolves([{ insertId: 42 }]);
     expect(await salesModel.create()).to.be.equal(42);
   });
+
+  it('insertSoldItem', async function () {
+    sinon.stub(connection, 'execute').resolves([{ insertId: 42 }]);
+    expect(await salesModel.insertSoldItem({ saleId: 1, productId: 1, quantity: 1 }))
+      .to.be.equal(42);
+  });
 });

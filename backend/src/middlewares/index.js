@@ -1,3 +1,4 @@
 const productsMiddlewares = require('./products.middlewares');
+const salesMiddlewares = require('./sales.middlewares');
 
-module.export = { productsMiddlewares };
+module.export = { productsMiddlewares, salesMiddlewares };
