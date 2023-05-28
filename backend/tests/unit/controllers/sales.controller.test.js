@@ -54,4 +54,23 @@ describe('Testes sales na camada controller', function () {
     expect(res.status).to.have.been.calledWith(404);
     expect(res.json).to.have.been.calledWith({ message: 'Sale not found' });
   });
+
+  it('create', async function () {
+    const products = [{ productId: 1, quantity: 1 }, { productId: 2, quantity: 5 }];
+    const req = { body: products };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    sinon.stub(salesService, 'createSale')
+      .resolves({
+        type: null,
+        message: {
+          id: 3,
+          itemsSold: products,
+        },
+      });
+    await salesController.create(req, res);
+    expect(res.status).to.have.been.calledWith(201);
+    expect(res.json).to.have.been.calledWith({ id: 3, itemsSold: products });
+  });
 });
