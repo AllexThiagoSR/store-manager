@@ -22,7 +22,9 @@ const create = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const { type, message } = await productsService.update(req.body);
+  const { name } = req.body;
+  const { id } = req.params;
+  const { type, message } = await productsService.update({ id, newName: name });
   const status = type || 200;
   const result = typeof message === 'string' ? { message } : message;
   return res.status(status).json(result);

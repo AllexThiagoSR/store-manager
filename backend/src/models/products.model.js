@@ -18,6 +18,7 @@ const create = async ({ name }) => {
 };
 
 const update = async ({ id, newName }) => {
+  console.log(id, newName);
   const [{ affectedRows }] = await connection
     .execute('UPDATE products SET name = ? WHERE id = ?', [newName, id]);
   return affectedRows;

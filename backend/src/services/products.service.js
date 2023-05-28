@@ -35,6 +35,7 @@ const create = async ({ name }) => {
 
 const update = async ({ id, newName }) => {
   try {
+    console.log(id, newName);
     const err = validateProduct({ name: newName });
     if (err.type) return err;
     if (!(await productsModel.getById(id))) {
