@@ -21,4 +21,11 @@ const create = async (req, res) => {
   return res.status(status).json(result);
 };
 
-module.exports = { getAll, getById, create };
+const update = async (req, res) => {
+  const { type, message } = await productsService.update(req.body);
+  const status = type || 200;
+  const result = typeof message === 'string' ? { message } : message;
+  return res.status(status).json(result);
+};
+
+module.exports = { getAll, getById, create, update };

@@ -129,6 +129,10 @@ describe('Testes products na camada controller', function () {
     const res = {};
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub();
+    sinon.stub(productsService, 'update').resolves({
+      type: null,
+      message: { id: 1, name: 'Produto Y' },
+    });
     await productsController.update(req, res);
     expect(res.status).to.have.been.calledWith(200);
     expect(res.json)
@@ -140,6 +144,10 @@ describe('Testes products na camada controller', function () {
     const res = {};
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub();
+    sinon.stub(productsService, 'update').resolves({
+      type: 404,
+      message: 'Product not found',
+    });
     await productsController.update(req, res);
     expect(res.status).to.have.been.calledWith(404);
     expect(res.json)
@@ -151,6 +159,10 @@ describe('Testes products na camada controller', function () {
     const res = {};
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub();
+    sinon.stub(productsService, 'update').resolves({
+      type: 422,
+      message: '"name" length must be at least 5 characters long',
+    });
     await productsController.update(req, res);
     expect(res.status).to.have.been.calledWith(422);
     expect(res.json)
