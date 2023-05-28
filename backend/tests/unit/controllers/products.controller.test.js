@@ -8,6 +8,7 @@ const { productsController } = require('../../../src/controllers');
 const { validateProductCreate } = require('../../../src/middlewares/products.middlewares');
 
 const INTERNAL_SERVER_ERROR = 'Internal server error';
+const PRODUCT_NOT_FOUND = 'Product not found';
 chai.use(sinonChai);
 const { expect } = chai;
 describe('Testes products na camada controller', function () {
@@ -51,10 +52,10 @@ describe('Testes products na camada controller', function () {
     const res = {};
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub();
-    sinon.stub(productsService, 'getById').resolves({ type: 404, message: 'Product not found' });
+    sinon.stub(productsService, 'getById').resolves({ type: 404, message: PRODUCT_NOT_FOUND });
     await productsController.getById(req, res);
     expect(res.status).to.have.been.calledWith(404);
-    expect(res.json).to.have.been.calledWith({ message: 'Product not found' });
+    expect(res.json).to.have.been.calledWith({ message: PRODUCT_NOT_FOUND });
   });
 
   it('getById quando há um erro não mapeado na camada service', async function () {
@@ -146,12 +147,12 @@ describe('Testes products na camada controller', function () {
     res.json = sinon.stub();
     sinon.stub(productsService, 'update').resolves({
       type: 404,
-      message: 'Product not found',
+      message: PRODUCT_NOT_FOUND,
     });
     await productsController.update(req, res);
     expect(res.status).to.have.been.calledWith(404);
     expect(res.json)
-      .to.have.been.calledWith({ message: 'Product not found' });
+      .to.have.been.calledWith({ message: PRODUCT_NOT_FOUND });
   });
 
   it('update com nome inválido', async function () {
@@ -167,5 +168,35 @@ describe('Testes products na camada controller', function () {
     expect(res.status).to.have.been.calledWith(422);
     expect(res.json)
       .to.have.been.calledWith({ message: '"name" length must be at least 5 characters long' });
+  });
+
+  it('deleteProduct', async function () {
+    const req = { params: { id: 1 } };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.end = sinon.stub();
+    sinon.stub(productsService, 'deleteProduct').resolves({
+      type: null,
+      message: '',
+    });
+    await productsController.deleteProduct(req, res);
+    expect(res.status).to.have.been.calledWith(204);
+    expect(res.end)
+      .to.have.been.calledWith();
+  });
+
+  it('deleteProduct com id inválido', async function () {
+    const req = { params: { id: 10000 } };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    sinon.stub(productsService, 'deleteProduct').resolves({
+      type: 404,
+      message: PRODUCT_NOT_FOUND,
+    });
+    await productsController.deleteProduct(req, res);
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json)
+      .to.have.been.calledWith({ message: PRODUCT_NOT_FOUND });
   });
 });
