@@ -123,4 +123,37 @@ describe('Testes products na camada controller', function () {
     await validateProductCreate(req, res, next);
     expect(next).to.have.been.calledWith();
   });
+
+  it('update', async function () {
+    const req = { body: { name: 'Produto Y' }, params: { id: 1 } };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    await productsController.update(req, res);
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json)
+      .to.have.been.calledWith({ id: 1, name: 'Produto Y' });
+  });
+
+  it('update com id inválido', async function () {
+    const req = { body: { name: 'Produto Y' }, params: { id: 10000 } };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    await productsController.update(req, res);
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json)
+      .to.have.been.calledWith({ message: 'Product not found' });
+  });
+
+  it('update com nome inválido', async function () {
+    const req = { body: { name: 'Pro' }, params: { id: 10000 } };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub();
+    await productsController.update(req, res);
+    expect(res.status).to.have.been.calledWith(422);
+    expect(res.json)
+      .to.have.been.calledWith({ message: '"name" length must be at least 5 characters long' });
+  });
 });
