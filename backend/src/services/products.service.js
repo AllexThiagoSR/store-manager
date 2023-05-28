@@ -51,7 +51,10 @@ const update = async ({ id, newName }) => {
 const deleteProduct = async (id) => {
   try {
     const product = await productsModel.getById(id);
-    if (product) return { type: null, message: '' };
+    if (product) { 
+      await productsModel.deleteProduct(id);
+      return { type: null, message: '' }; 
+    }
     return { type: 404, message: 'Product not found' };
   } catch (error) {
     return { type: 500, message: INTERNAL_SERVER_ERROR };
