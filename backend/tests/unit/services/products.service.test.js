@@ -82,7 +82,7 @@ describe('Testes products na camada service', function () {
       .to.be.deep.equal({ type: 422, message: '"name" length must be at least 5 characters long' });
   });
 
-  it('deletProduct', async function () {
+  it('deleteProduct', async function () {
     sinon.stub(productsModel, 'deleteProduct').resolves(1);
     sinon.stub(productsModel, 'getById').resolves({ id: 1, name: 'Produto X' });
     expect(await productsService.deleteProduct(1))

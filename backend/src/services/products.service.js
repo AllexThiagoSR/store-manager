@@ -35,7 +35,6 @@ const create = async ({ name }) => {
 
 const update = async ({ id, newName }) => {
   try {
-    console.log(id, newName);
     const err = validateProduct({ name: newName });
     if (err.type) return err;
     if (!(await productsModel.getById(id))) {
@@ -49,4 +48,14 @@ const update = async ({ id, newName }) => {
   }
 };
 
-module.exports = { getAll, getById, create, update };
+const deleteProduct = async (id) => {
+  try {
+    const product = await productsModel.getById(id);
+    if (product) return { type: null, message: '' };
+    return { type: 404, message: 'Product not found' };
+  } catch (error) {
+    return { type: 500, message: INTERNAL_SERVER_ERROR };
+  }
+};
+
+module.exports = { getAll, getById, create, update, deleteProduct };
