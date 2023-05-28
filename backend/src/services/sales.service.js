@@ -1,4 +1,5 @@
 const { salesModel, productsModel } = require('../models');
+const validateCreateSale = require('./validations/validateSaleItems');
 
 const getAll = async () => {
   try {
@@ -21,6 +22,8 @@ const getById = async (id) => {
 
 const createSale = async (items) => {
   try {
+    const err = validateCreateSale(items);
+    if (err.type) return err;
     const soldItems = items.map(({ productId }) => productsModel.getById(productId));
     if ((await Promise.all(soldItems)).includes(undefined)) {
       return { type: 404, message: 'Product not found' };
