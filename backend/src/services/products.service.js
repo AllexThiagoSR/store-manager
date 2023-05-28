@@ -43,7 +43,7 @@ const update = async ({ id, newName }) => {
     }
     const affectedRows = await productsModel.update({ id, newName });
     if (!affectedRows) return { type: 500, message: 'Can\'t update' };
-    return { type: null, message: { id, name: newName } };
+    return { type: null, message: { id: Number(id), name: newName } };
   } catch (error) {
     return { type: 500, message: INTERNAL_SERVER_ERROR };
   }
