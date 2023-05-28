@@ -58,4 +58,23 @@ describe('Testes de sales na camada model', function () {
     expect(await salesService.createSale([{ productId: 1, quantity: 1 }]))
       .to.be.deep.equal({ type: 500, message: 'Internal server error' });
   });
+
+  it('update', async function () {
+    sinon.stub(salesModel, 'update').resolves(1);
+    sinon.stub(productsModel, 'getById').resolves({ id: 1, name: 'Produto X' });
+    expect(await salesService.update({ id: 1, newName: 'Produto Y' }))
+      .to.be.deep.equal({ type: null, message: { id: 1, name: 'Produto Y' } });
+  });
+
+  it('update com id inexistente', async function () {
+    sinon.stub(salesModel, 'update').resolves(0);
+    sinon.stub(productsModel, 'getById').resolves(undefined);
+    expect(await salesService.update({ id: 1000, newName: 'Produto Y' }))
+      .to.be.deep.equal({ type: 404, message: 'Product not found' });
+  });
+
+  it('update com um nome inválido', async function () {
+    expect(await salesService.update({ id: 1, newName: 'Pro' }))
+      .to.be.deep.equal({ type: 422, message: '"name" length must be at least 5 characters long' });
+  });
 });
