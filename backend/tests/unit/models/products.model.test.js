@@ -32,4 +32,9 @@ describe('Testes products na camada model', function () {
     sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
     expect(await productsModel.update({ id: 1, newName: 'Product Y' })).to.be.equal(1);
   });
+
+  it('delete', async function () {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
+    expect(await productsModel.deleteProduct(1)).to.be.equal(1);
+  });
 });

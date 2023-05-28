@@ -18,10 +18,14 @@ const create = async ({ name }) => {
 };
 
 const update = async ({ id, newName }) => {
-  console.log(id, newName);
   const [{ affectedRows }] = await connection
     .execute('UPDATE products SET name = ? WHERE id = ?', [newName, id]);
   return affectedRows;
 };
 
-module.exports = { getAll, getById, create, update };
+const deleteProduct = async (id) => {
+  const [{ affectedRows }] = await connection.execute('DELETE FROM products WHERE id = ?', [id]);
+  return affectedRows;
+};
+
+module.exports = { getAll, getById, create, update, deleteProduct };
