@@ -16,4 +16,5 @@ const createSaleSchema = Joi.array().items(saleItem).min(1).required();
 module.exports = {
   createProductSchema,
   createSaleSchema,
+  nameSchema,
 };

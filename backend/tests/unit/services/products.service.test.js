@@ -62,4 +62,23 @@ describe('Testes products na camada service', function () {
         message: '"name" length must be at least 5 characters long',
     });
   });
+
+  it('update', async function () {
+    sinon.stub(productsModel, 'update').resolves(1);
+    sinon.stub(productsModel, 'getById').resolves({ id: 1, name: 'Produto X' });
+    expect(await productsService.update({ id: 1, newName: 'Produto Y' }))
+      .to.be.deep.equal({ type: null, message: { id: 1, name: 'Produto Y' } });
+  });
+
+  it('update com id inexistente', async function () {
+    sinon.stub(productsModel, 'update').resolves(0);
+    sinon.stub(productsModel, 'getById').resolves(undefined);
+    expect(await productsService.update({ id: 1000, newName: 'Produto Y' }))
+      .to.be.deep.equal({ type: 404, message: 'Product not found' });
+  });
+
+  it('update com um nome inválido', async function () {
+    expect(await productsService.update({ id: 1, newName: 'Pro' }))
+      .to.be.deep.equal({ type: 422, message: '"name" length must be at least 5 characters long' });
+  });
 });
