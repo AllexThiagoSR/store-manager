@@ -81,4 +81,18 @@ describe('Testes products na camada service', function () {
     expect(await productsService.update({ id: 1, newName: 'Pro' }))
       .to.be.deep.equal({ type: 422, message: '"name" length must be at least 5 characters long' });
   });
+
+  it('deletProduct', async function () {
+    sinon.stub(productsModel, 'deleteProduct').resolves(1);
+    sinon.stub(productsModel, 'getById').resolves({ id: 1, name: 'Produto X' });
+    expect(await productsService.deleteProduct(1))
+      .to.be.deep.equal({ type: null, message: '' });
+  });
+
+  it('deletProduct com id inexistente', async function () {
+    sinon.stub(productsModel, 'deleteProduct').resolves(0);
+    sinon.stub(productsModel, 'getById').resolves(undefined);
+    expect(await productsService.deleteProduct(1000))
+      .to.be.deep.equal({ type: 404, message: 'Product not found' });
+  });
 });
