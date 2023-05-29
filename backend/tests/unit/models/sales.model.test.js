@@ -33,4 +33,9 @@ describe('Testes de sales na camada model', function () {
     expect(await salesModel.insertSoldItem({ saleId: 1, productId: 1, quantity: 1 }))
       .to.be.equal(42);
   });
+
+  it('deleteSale', async function () {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
+    expect(await salesModel.deleteSale(1)).to.be.equal(1);
+  });
 });

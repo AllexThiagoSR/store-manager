@@ -38,4 +38,8 @@ const createSale = async (items) => {
   }
 };
 
-module.exports = { getAll, getById, createSale };
+const deleteSale = async (_id) => {
+
+};
+
+module.exports = { getAll, getById, createSale, deleteSale };
