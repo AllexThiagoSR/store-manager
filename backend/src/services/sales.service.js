@@ -38,8 +38,15 @@ const createSale = async (items) => {
   }
 };
 
-const deleteSale = async (_id) => {
-
+const deleteSale = async (id) => {
+  try {
+    const result = await salesModel.getById(id);
+    if (result.length === 0) return { type: 404, message: 'Sale not found' };
+    await salesModel.deleteSale(id);
+    return { type: null, message: '' };
+  } catch (e) {
+    return { type: 500, message: 'Internal server error' };
+  }
 };
 
 module.exports = { getAll, getById, createSale, deleteSale };

@@ -58,4 +58,25 @@ describe('Testes de sales na camada model', function () {
     expect(await salesService.createSale([{ productId: 1, quantity: 1 }]))
       .to.be.deep.equal({ type: 500, message: 'Internal server error' });
   });
+
+  it('deleteSale', async function () {
+    sinon.stub(salesModel, 'deleteSale').resolves(1);
+    sinon.stub(salesModel, 'getById').resolves([{}]);
+    expect(await salesService.deleteSale(1))
+      .to.be.deep.equal({ type: null, message: '' });
+  });
+
+  it('deleteSale com um id inexistente', async function () {
+    sinon.stub(salesModel, 'deleteSale').resolves(1);
+    sinon.stub(salesModel, 'getById').resolves([]);
+    expect(await salesService.deleteSale(1))
+      .to.be.deep.equal({ type: 404, message: 'Sale not found' });
+  });
+
+  // it('createSale com um erro não mapeado em alguma das camadas mais baixas', async function () {
+  //   sinon.stub(salesModel, 'create').resolves(3);
+  //   sinon.stub(productsModel, 'getById').rejects();
+  //   expect(await salesService.createSale([{ productId: 1, quantity: 1 }]))
+  //     .to.be.deep.equal({ type: 500, message: 'Internal server error' });
+  // });
 });
