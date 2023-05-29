@@ -38,4 +38,10 @@ describe('Testes de sales na camada model', function () {
     sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
     expect(await salesModel.deleteSale(1)).to.be.equal(1);
   });
+
+  it('updateQuantity', async function () {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
+    expect(await salesModel.updateQuantity({ saleId: 1, productId: 1, quantity: 20 }))
+      .to.be.equal(1);
+  });
 });
