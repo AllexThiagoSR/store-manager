@@ -97,4 +97,26 @@ describe('Testes sales na camada controller', function () {
     expect(res.json).to.have.been
       .calledWith({ message: '"productId" is required' });
   });
+
+  it('deleteSale com id existente', async function () {
+    const req = { params: { id: '1' } };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.end = sinon.stub();
+    sinon.stub(salesService, 'deleteSale').resolves({ type: null, message: '' });
+    await salesController.deleteSale(req, res);
+    expect(res.status).to.have.been.calledWith(204);
+    expect(res.end).to.have.been.calledWith();
+  });
+
+  it('deleteSale com id inexistente', async function () {
+    const req = { params: { id: '999999' } };
+    const res = {};
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(salesService, 'deleteSale').resolves({ type: 404, message: 'Sale not found' });
+    await salesController.deleteSale(req, res);
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith({ message: 'Sale not found' });
+  });
 });
