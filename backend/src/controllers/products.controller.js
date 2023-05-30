@@ -38,4 +38,11 @@ const deleteProduct = async ({ params }, res) => {
   return res.status(status).json({ message });
 };
 
-module.exports = { getAll, getById, create, update, deleteProduct };
+const getByQuery = async ({ query }, res) => {
+  const { type, message } = await productsService.getByQuery(query);
+  const status = type || 200;
+  if (message === '') return res.status(status).end();
+  return res.status(status).json({ message });
+};
+
+module.exports = { getAll, getById, create, update, deleteProduct, getByQuery };

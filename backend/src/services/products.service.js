@@ -61,4 +61,15 @@ const deleteProduct = async (id) => {
   }
 };
 
-module.exports = { getAll, getById, create, update, deleteProduct };
+const getByQuery = async ({ q }) => {
+  try {
+    const query = { q };
+    if (!query.q) query.q = '';
+    const products = await productsModel.getByQuery(query);
+    return { type: null, message: products };
+  } catch (error) {
+    return { type: 500, message: INTERNAL_SERVER_ERROR };
+  }
+};
+
+module.exports = { getAll, getById, create, update, deleteProduct, getByQuery };
