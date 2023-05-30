@@ -30,7 +30,7 @@ const deleteProduct = async (id) => {
 
 const getByQuery = async ({ q }) => {
   const [result] = await connection
-    .execute('SELECT * FROM products WHERE name LIKE "%?%"', [q]);
+    .execute('SELECT * FROM products WHERE name LIKE ?;', [`%${q}%`]);
   return result;
 };
 

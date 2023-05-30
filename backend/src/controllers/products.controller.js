@@ -41,8 +41,8 @@ const deleteProduct = async ({ params }, res) => {
 const getByQuery = async ({ query }, res) => {
   const { type, message } = await productsService.getByQuery(query);
   const status = type || 200;
-  if (message === '') return res.status(status).end();
-  return res.status(status).json({ message });
+  const result = typeof message === 'string' ? { message } : message;
+  return res.status(status).json(result);
 };
 
 module.exports = { getAll, getById, create, update, deleteProduct, getByQuery };
