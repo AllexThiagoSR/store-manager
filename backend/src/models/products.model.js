@@ -28,4 +28,10 @@ const deleteProduct = async (id) => {
   return affectedRows;
 };
 
-module.exports = { getAll, getById, create, update, deleteProduct };
+const getByQuery = async ({ q }) => {
+  const [result] = await connection
+    .execute('SELECT * FROM products WHERE name LIKE "%?%"', [q]);
+  return result;
+};
+
+module.exports = { getAll, getById, create, update, deleteProduct, getByQuery };
