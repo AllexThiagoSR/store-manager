@@ -4,4 +4,10 @@ const validateProductCreate = async (req, res, next) => {
   return next();
 };
 
-module.exports = { validateProductCreate };
+const quantitiesIsDefined = async ({ body }, res, next) => {
+  const { quantity } = body;
+  if (!quantity) return res.status(400).json({ message: '"quantity" is required' });
+  return next();
+};
+
+module.exports = { validateProductCreate, quantitiesIsDefined };

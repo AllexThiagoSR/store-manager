@@ -1,4 +1,5 @@
 const { salesModel, productsModel } = require('../models');
+const validateQuantity = require('./validations/validateQuantity');
 const validateCreateSale = require('./validations/validateSaleItems');
 
 const INTERNAL_SERVER_ERROR = 'Internal server error';
@@ -53,6 +54,8 @@ const deleteSale = async (id) => {
 
 const updateQuantity = async (infos) => {
   try {
+    const error = validateQuantity({ quantity: infos.quantity });
+    if (error.type) return error;
     const sale = await salesModel.getById(infos.saleId);
     if (sale.length === 0) return { type: 404, message: 'Sale not found' };
     await salesModel.updateQuantity(infos);

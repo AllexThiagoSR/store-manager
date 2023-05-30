@@ -106,6 +106,17 @@ describe('Testes de sales na camada model', function () {
     expect(product).to.be.deep.equal({ type: 404, message: 'Product not found in sale' });
   });
 
+  it('updateQuantity com quantity inválido', async function () {
+    sinon.stub(salesModel, 'getById').resolves([[]]);
+    sinon.stub(salesModel, 'updateQuantity').resolves([{ affectedRows: 1 }]);
+    sinon.stub(salesModel, 'getProductsInSale').resolves(undefined);
+    const product = await salesService.updateQuantity({ saleId: 1, productId: 100, quantity: 0 });
+    expect(product).to.be.deep.equal({
+      message: '"quantity" must be greater than or equal to 1',
+      type: 422,
+    });
+  });
+
   it('updateQuantity com um erro não mapeado', async function () {
     sinon.stub(salesModel, 'getById').rejects();
     const product = await salesService.updateQuantity({ saleId: 1, productId: 100, quantity: 1 });
