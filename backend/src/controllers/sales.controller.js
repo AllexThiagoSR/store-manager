@@ -27,4 +27,13 @@ const deleteSale = async ({ params }, res) => {
   return res.status(204).end();
 };
 
-module.exports = { getAll, getById, create, deleteSale };
+const updateQuantity = async (req, res) => {
+  const { saleId, productId } = req.params;
+  const { quantity } = req.body;
+  const { type, message } = await salesService.updateQuantity({ saleId, productId, quantity });
+  const status = type || 201;
+  const result = typeof message === 'string' ? { message } : message;
+  return res.status(status).json(result);
+};
+
+module.exports = { getAll, getById, create, deleteSale, updateQuantity };

@@ -63,6 +63,7 @@ const updateQuantity = async (infos) => {
     if (!product) return { type: 404, message: 'Product not found in sale' };
     return { type: null, message: product };
   } catch (e) {
+    console.log(e.message);
     return { type: 500, message: INTERNAL_SERVER_ERROR };
   }
 };
