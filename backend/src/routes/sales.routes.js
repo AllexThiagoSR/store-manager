@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { salesController } = require('../controllers');
+const { quantityIsDefined } = require('../middlewares/products.middlewares');
 
 const router = Router();
 
@@ -11,6 +12,10 @@ router.post('/', salesController.create);
 
 router.delete('/:id', salesController.deleteSale);
 
-router.put('/:saleId/product/:productId/quantity', salesController.updateQuantity);
+router.put(
+  '/:saleId/products/:productId/quantity',
+  quantityIsDefined,
+  salesController.updateQuantity,
+);
 
 module.exports = router;

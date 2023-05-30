@@ -31,7 +31,7 @@ const updateQuantity = async (req, res) => {
   const { saleId, productId } = req.params;
   const { quantity } = req.body;
   const { type, message } = await salesService.updateQuantity({ saleId, productId, quantity });
-  const status = type || 201;
+  const status = type || 200;
   const result = typeof message === 'string' ? { message } : message;
   return res.status(status).json(result);
 };
